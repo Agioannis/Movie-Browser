@@ -211,3 +211,11 @@ categorySelect.addEventListener("change", () => {
 
     getMovies(searchTerm);
 });
+
+document.getElementById("home-link").addEventListener("click", (e) => {
+    e.preventDefault(); // Αποφυγή default συμπεριφοράς link
+    searchInput.value = "";  // Καθάρισε το search input
+    categorySelect.value = ""; // Καθάρισε την επιλογή κατηγορίας
+    autocompleteList.innerHTML = ""; // Καθάρισε autocomplete
+    getMovies("batman"); // Φόρτωσε τις προεπιλεγμένες ταινίες
+});
