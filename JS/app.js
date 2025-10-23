@@ -46,7 +46,7 @@ function displayMovies(movies) {
 
         const movieCard = document.createElement("div");
         movieCard.classList.add("movie-card");
-
+        movieCard.style.cursor = "pointer";
         movieCard.innerHTML = `
       <img 
         src="${Poster !== "N/A" ? Poster : 'https://via.placeholder.com/500x750?text=No+Image'}"
@@ -55,15 +55,15 @@ function displayMovies(movies) {
       <div class="movie-info">
         <h5 class="movie-title">${Title}</h5>
         <div class="movie-meta">
-          <span>${Year}</span>
-          <span>${Type.toUpperCase()}</span>
+          <span>${Year}</span> <span>${Type.toUpperCase()}</span>
         </div>
       </div>
     `;
-
+        movieCard.addEventListener("click", () => showMovieDetails(imdbID));
         movieContainer.appendChild(movieCard);
     });
 }
+
 
 // =============================
 // Event Listeners
@@ -82,3 +82,43 @@ searchForm.addEventListener("submit", (e) => {
         getMovies();
     }
 });
+
+async function showMovieDetails(imdbID) {
+    try {
+        const url = `${BASE_URL}?apikey=${API_KEY}&i=${imdbID}&plot=full`;
+        const res = await fetch(url);
+        const movie = await res.json();
+
+        // Ετοιμάζουμε τα ratings
+        let ratings = '';
+        if (movie.Ratings && movie.Ratings.length) {
+            ratings = movie.Ratings.map(r => `<li>${r.Source}: <b>${r.Value}</b></li>`).join('');
+            ratings = `<ul>${ratings}</ul>`;
+        } else {
+            ratings = "<div>No external ratings found.</div>";
+        }
+
+        // Εμφάνιση modal
+        document.getElementById("movieModalLabel").innerText = movie.Title;
+        document.getElementById("modalBody").innerHTML = `
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <img src="${movie.Poster !== "N/A" ? movie.Poster : 'https://via.placeholder.com/500x750?text=No+Image'}" class="img-fluid rounded" />
+        </div>
+        <div class="col-md-8">
+          <p><strong>Year:</strong> ${movie.Year}</p>
+          <p><strong>Genre:</strong> ${movie.Genre}</p>
+          <p><strong>Plot:</strong> ${movie.Plot}</p>
+          <h6>Ratings:</h6>
+          ${ratings}
+        </div>
+      </div>
+    `;
+        // Bootstrap 5 modal show
+        const modal = new bootstrap.Modal(document.getElementById('movieModal'));
+        modal.show();
+    } catch (error) {
+        alert("Failed to load movie details.");
+    }
+}
+
