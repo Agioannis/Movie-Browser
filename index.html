@@ -3,34 +3,51 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Movie Browser App</title>
-
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="CSS/style.css" />
 </head>
 
 <body class="bg-dark text-light">
-    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold text-danger" href="#">MovieBrowser</a>
-            <form id="search-form" class="d-flex ms-auto" role="search">
-                <input class="form-control me-2" id="search-input" type="search" placeholder="Search movies..."
-                    aria-label="Search">
+            <form id="search-form" class="d-flex ms-auto align-items-center" role="search" autocomplete="off">
+                <div class="position-relative me-2" style="width: 300px;">
+                    <input class="form-control" id="search-input" type="search" placeholder="Search movies..."
+                        aria-label="Search" autocomplete="off" />
+                    <ul id="autocomplete-list" class="list-group position-absolute w-100" style="
+              z-index: 1050;
+              max-height: 200px;
+              overflow-y: auto;
+              top: 100%;
+              left: 0;
+              border-radius: 0 0 5px 5px;
+            "></ul>
+                </div>
+
+                <select id="category-select" class="form-select me-2" aria-label="Select category"
+                    style="width: 140px;">
+                    <option value="">All Categories</option>
+                    <option value="action">Action</option>
+                    <option value="comedy">Comedy</option>
+                    <option value="drama">Drama</option>
+                    <option value="horror">Horror</option>
+                    <option value="romance">Romance</option>
+                    <option value="sci-fi">Sci-Fi</option>
+                    <option value="thriller">Thriller</option>
+                </select>
+
                 <button class="btn btn-outline-danger" type="submit">Search</button>
             </form>
         </div>
     </nav>
 
-    <!-- Movie Results Section -->
     <div class="container my-5">
-        <h2 class="mb-4 text-center text-danger">Popular Movies</h2>
+        <h2 class="mb-4 text-center text-danger">Movie Results</h2>
         <div id="movie-container" class="row g-4">
-
+            <!-- Movie cards displayed here -->
         </div>
     </div>
 
@@ -40,22 +57,19 @@
             <div class="modal-content bg-dark text-light">
                 <div class="modal-header">
                     <h5 class="modal-title" id="movieModalLabel"></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="modalBody"></div>
             </div>
         </div>
     </div>
 
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
-    </script>
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Custom JS -->
     <script src="JS/app.js"></script>
-
-
 </body>
 
 </html>

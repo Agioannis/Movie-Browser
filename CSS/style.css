@@ -1,7 +1,3 @@
-/* =============================
-   Global Styles
-============================= */
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 :root {
@@ -26,10 +22,6 @@ body {
     overflow-x: hidden;
 }
 
-/* =============================
-   Navbar
-============================= */
-
 .navbar-brand {
     font-size: 1.8rem;
     letter-spacing: 1px;
@@ -48,10 +40,6 @@ body {
 #search-input::placeholder {
     color: var(--text-muted);
 }
-
-/* =============================
-   Movie Grid
-============================= */
 
 #movie-container {
     display: grid;
@@ -96,21 +84,9 @@ body {
     justify-content: space-between;
 }
 
-/* =============================
-   Headings
-============================= */
-
 h2 {
     font-weight: 600;
     color: var(--accent-color);
-}
-
-/* =============================
-   Utility Classes
-============================= */
-
-.text-center {
-    text-align: center;
 }
 
 button {
@@ -128,9 +104,27 @@ button:hover {
     background-color: #b4060f;
 }
 
-/* =============================
-   Responsive Tweaks
-============================= */
+#autocomplete-list {
+    background-color: var(--card-bg);
+    border: 1px solid #e50914;
+    border-radius: 0 0 5px 5px;
+    margin-top: 0.25rem;
+    padding: 0;
+    list-style: none;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+#autocomplete-list li {
+    padding: 10px 15px;
+    cursor: pointer;
+    color: var(--text-light);
+}
+
+#autocomplete-list li:hover {
+    background-color: #e50914;
+    color: white;
+}
 
 @media (max-width: 768px) {
     #search-form {
