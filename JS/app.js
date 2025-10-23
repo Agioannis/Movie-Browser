@@ -9,6 +9,7 @@ const autocompleteList = document.getElementById("autocomplete-list");
 
 let debounceTimer;
 
+// Autocomplete event with debounce
 searchInput.addEventListener("input", () => {
     clearTimeout(debounceTimer);
     const query = searchInput.value.trim();
@@ -16,12 +17,12 @@ searchInput.addEventListener("input", () => {
         autocompleteList.innerHTML = "";
         return;
     }
-
     debounceTimer = setTimeout(() => {
         fetchAutocomplete(query);
     }, 300);
 });
 
+// Autocomplete fetching function
 async function fetchAutocomplete(query) {
     try {
         const url = `${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(query)}`;
@@ -37,32 +38,56 @@ async function fetchAutocomplete(query) {
     }
 }
 
+// Show autocomplete suggestions with poster and dark style
 function showAutocomplete(movies) {
     autocompleteList.innerHTML = movies
         .map(
             (movie) => `
-      <li class="list-group-item list-group-item-action" data-imdbid="${movie.imdbID}">
-        ${movie.Title} (${movie.Year})
+      <li class="autocomplete-item" data-imdbid="${movie.imdbID}">
+        <img src="${movie.Poster && movie.Poster !== "N/A"
+                    ? movie.Poster
+                    : "https://via.placeholder.com/40x60?text=No+Image"
+                }" alt="${movie.Title}" style="width: 40px; height: 60px; object-fit: cover; border-radius: 3px; margin-right: 10px; display: inline-block; vertical-align: middle;">
+        <span style="vertical-align: middle;">${movie.Title}</span>
       </li>
     `
         )
         .join("");
 
+    // On suggestion click, show only this movie in the main grid!
     autocompleteList.querySelectorAll("li").forEach((item) => {
         item.addEventListener("click", () => {
-            searchInput.value = item.textContent;
+            const imdbID = item.getAttribute("data-imdbid");
             autocompleteList.innerHTML = "";
-            getMovies(item.textContent);
+            showSingleMovie(imdbID);
         });
     });
 }
 
+// Fetch and show a single movie in the results grid
+async function showSingleMovie(imdbID) {
+    try {
+        const url = `${BASE_URL}?apikey=${API_KEY}&i=${imdbID}`;
+        const res = await fetch(url);
+        const movie = await res.json();
+        if (movie.Response === "True" || movie.Title) {
+            displayMovies([movie]);
+        } else {
+            movieContainer.innerHTML = '<p class="text-center text-warning">Movie not found.</p>';
+        }
+    } catch (error) {
+        movieContainer.innerHTML = '<p class="text-center text-danger">Failed to load movie.</p>';
+    }
+}
+
+// Close autocomplete when clicking outside
 document.addEventListener("click", (e) => {
     if (!autocompleteList.contains(e.target) && e.target !== searchInput) {
         autocompleteList.innerHTML = "";
     }
 });
 
+// Fetch movies by query
 async function getMovies(query = "batman") {
     try {
         const url = `${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(query)}`;
@@ -72,16 +97,15 @@ async function getMovies(query = "batman") {
         if (data.Response === "True") {
             displayMovies(data.Search);
         } else {
-            movieContainer.innerHTML = `<p class="text-center text-warning">${data.Error || "No movies found!"
-                }</p>`;
+            movieContainer.innerHTML = `<p class="text-center text-warning">${data.Error || "No movies found!"}</p>`;
         }
     } catch (error) {
-        movieContainer.innerHTML =
-            '<p class="text-center text-danger">Failed to load movies. Please try again later.</p>';
+        movieContainer.innerHTML = '<p class="text-center text-danger">Failed to load movies. Please try again later.</p>';
         console.error("Error fetching from OMDb:", error);
     }
 }
 
+// Display array of movies in the grid
 function displayMovies(movies) {
     movieContainer.innerHTML = "";
 
@@ -93,16 +117,13 @@ function displayMovies(movies) {
         movieCard.style.cursor = "pointer";
         movieCard.innerHTML = `
       <img 
-        src="${Poster !== "N/A"
-                ? Poster
-                : "https://via.placeholder.com/500x750?text=No+Image"
-            }"
+        src="${Poster && Poster !== "N/A" ? Poster : "https://via.placeholder.com/500x750?text=No+Image"}"
         alt="${Title}" class="movie-poster"
       />
       <div class="movie-info">
         <h5 class="movie-title">${Title}</h5>
         <div class="movie-meta">
-          <span>${Year}</span> <span>${Type.toUpperCase()}</span>
+          <span>${Year}</span> <span>${Type ? Type.toUpperCase() : ""}</span>
         </div>
       </div>
     `;
@@ -111,6 +132,7 @@ function displayMovies(movies) {
     });
 }
 
+// Show details modal for a movie
 async function showMovieDetails(imdbID) {
     try {
         const url = `${BASE_URL}?apikey=${API_KEY}&i=${imdbID}&plot=full`;
@@ -131,7 +153,7 @@ async function showMovieDetails(imdbID) {
         document.getElementById("modalBody").innerHTML = `
       <div class="row">
         <div class="col-md-4 mb-3">
-          <img src="${movie.Poster !== "N/A"
+          <img src="${movie.Poster && movie.Poster !== "N/A"
                 ? movie.Poster
                 : "https://via.placeholder.com/500x750?text=No+Image"
             }" class="img-fluid rounded" />
@@ -152,8 +174,10 @@ async function showMovieDetails(imdbID) {
     }
 }
 
-// Ανάκτηση αρχικών ταινιών (προεπιλεγμένα "batman")
+// αρχικό φορτίο
 getMovies();
+
+// Form submit handler
 searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const query = searchInput.value.trim();
@@ -168,9 +192,22 @@ searchForm.addEventListener("submit", (e) => {
         searchTerm = query;
     }
 
-    if (searchTerm) {
-        getMovies(searchTerm);
-    } else {
-        getMovies();
+    getMovies(searchTerm);
+});
+
+// Category change auto-update handler
+categorySelect.addEventListener("change", () => {
+    const query = searchInput.value.trim();
+    const category = categorySelect.value.trim();
+
+    let searchTerm = "";
+    if (query && category) {
+        searchTerm = `${category} ${query}`;
+    } else if (category) {
+        searchTerm = category;
+    } else if (query) {
+        searchTerm = query;
     }
+
+    getMovies(searchTerm);
 });

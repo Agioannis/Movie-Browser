@@ -105,7 +105,8 @@ button:hover {
 }
 
 #autocomplete-list {
-    background-color: var(--card-bg);
+    background-color: #000;
+    color: #fff;
     border: 1px solid #e50914;
     border-radius: 0 0 5px 5px;
     margin-top: 0.25rem;
@@ -113,17 +114,32 @@ button:hover {
     list-style: none;
     max-height: 250px;
     overflow-y: auto;
+    z-index: 1050;
 }
 
-#autocomplete-list li {
-    padding: 10px 15px;
+#autocomplete-list li.autocomplete-item {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
     cursor: pointer;
-    color: var(--text-light);
+    color: #fff;
+    background-color: #000;
+    border-bottom: 1px solid #222;
+    transition: background 0.2s;
 }
 
-#autocomplete-list li:hover {
+#autocomplete-list li.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+#autocomplete-list li.autocomplete-item:hover {
     background-color: #e50914;
     color: white;
+}
+
+#autocomplete-list img {
+    margin-right: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
 }
 
 @media (max-width: 768px) {
@@ -133,6 +149,11 @@ button:hover {
     }
 
     #search-input {
-        margin-bottom: 10px;
+        background-color: #181818;
+        color: var(--text-light);
+        border: 1px solid #555;
+        padding-left: 10px;
+
     }
+
 }
