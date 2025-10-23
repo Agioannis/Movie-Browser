@@ -1,0 +1,144 @@
+/* =============================
+   Global Styles
+============================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    --primary-color: #121212;
+    --secondary-color: #1e1e1e;
+    --accent-color: #e50914;
+    --text-light: #fafafa;
+    --text-muted: #b3b3b3;
+    --card-bg: #222;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--primary-color);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-light);
+    overflow-x: hidden;
+}
+
+/* =============================
+   Navbar
+============================= */
+
+.navbar-brand {
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+}
+
+.navbar {
+    border-bottom: 1px solid #333;
+}
+
+#search-input {
+    background-color: #181818;
+    color: var(--text-light);
+    border: 1px solid #555;
+}
+
+#search-input::placeholder {
+    color: var(--text-muted);
+}
+
+/* =============================
+   Movie Grid
+============================= */
+
+#movie-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.movie-card {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.movie-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.25);
+}
+
+.movie-poster {
+    width: 100%;
+    height: 370px;
+    object-fit: cover;
+}
+
+.movie-info {
+    padding: 15px;
+}
+
+.movie-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 5px;
+}
+
+.movie-meta {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+}
+
+/* =============================
+   Headings
+============================= */
+
+h2 {
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+/* =============================
+   Utility Classes
+============================= */
+
+.text-center {
+    text-align: center;
+}
+
+button {
+    background-color: var(--accent-color);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background-color: #b4060f;
+}
+
+/* =============================
+   Responsive Tweaks
+============================= */
+
+@media (max-width: 768px) {
+    #search-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #search-input {
+        margin-bottom: 10px;
+    }
+}
